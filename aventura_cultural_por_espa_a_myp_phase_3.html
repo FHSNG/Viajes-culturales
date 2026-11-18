@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aventura Cultural por España: Misión Andalucía y Más Allá</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Fraunces for warm editorial Spanish aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Fraunces', 'serif'],
+          },
+          colors: {
+            terracotta: {
+              50: '#fdf6f3',
+              100: '#fbeae3',
+              200: '#f6d2c3',
+              300: '#efb299',
+              400: '#e58763',
+              500: '#d96338',
+              600: '#c34b24',
+              700: '#a23b1d',
+              800: '#85331d',
+              900: '#6e2d1c',
+            },
+            azulejo: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              200: '#bae0fd',
+              300: '#7cc8fb',
+              400: '#36adf6',
+              500: '#0c93e7',
+              600: '#0074c5',
+              700: '#015ca0',
+              800: '#064f84',
+              900: '#0b426e',
+            },
+            saffron: {
+              50: '#fefce8',
+              100: '#fef9c3',
+              200: '#fef08a',
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+              700: '#a16207',
+              800: '#854d0e',
+            },
+            olive: {
+              50: '#f6f8f3',
+              100: '#e9efe2',
+              200: '#d3dfc6',
+              300: '#b3c89e',
+              400: '#8fad73',
+              500: '#6f9052',
+              600: '#55723e',
+              700: '#435932',
+              800: '#38482b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Spanish Azulejo background pattern */
+    .azulejo-bg {
+      background-color: #fdfaf5;
+      background-image: 
+        radial-gradient(circle at 12px 12px, rgba(0, 116, 197, 0.06) 2px, transparent 0),
+        radial-gradient(circle at 36px 36px, rgba(217, 99, 56, 0.06) 2px, transparent 0);
+      background-size: 48px 48px;
+    }
+
+    /* Decorative tile border */
+    .tile-border {
+      border-image: repeating-linear-gradient(
+        45deg,
+        #0074c5,
+        #0074c5 10px,
+        #eab308 10px,
+        #eab308 20px,
+        #c34b24 20px,
+        #c34b24 30px
+      ) 8;
+    }
+
+    /* Smooth animations */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    .animate-float {
+      animation: floatSlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes stampPop {
+      0% { transform: scale(2.2) rotate(-25deg); opacity: 0; }
+      70% { transform: scale(0.92) rotate(-8deg); opacity: 1; }
+      100% { transform: scale(1) rotate(-10deg); opacity: 1; }
+    }
+    .stamp-earned {
+      animation: stampPop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Interactive vocabulary highlight */
+    .vocab-term {
+      border-bottom: 2px dashed #0c93e7;
+      background-color: rgba(224, 239, 254, 0.45);
+      padding: 0 3px;
+      border-radius: 4px;
+      cursor: help;
+      transition: all 0.15s ease;
+    }
+    .vocab-term:hover {
+      background-color: #bae0fd;
+      color: #0b426e;
+    }
+
+    /* Print styling for the final certificate & formal letter */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-certificate, #printable-certificate * {
+        visibility: visible;
+      }
+      #printable-certificate {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none !important;
+        border: 2px solid #0074c5 !important;
+      }
+    }
+  </style>
+</head>
+<body class="azulejo-bg text-slate-800 min-h-screen flex flex-col selection:bg-saffron-200 selection:text-slate-900">
+
+  <!-- TOP NAVIGATION & SCAFFOLD TOOLBAR -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-azulejo-600 shadow-sm">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Brand / Title -->
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="goHome()">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-terracotta-500 via-saffron-500 to-azulejo-600 flex items-center justify-center text-white shadow-md shrink-0">
+          <!-- Custom Sun & Arch SVG Icon -->
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 21V11a8 8 0 0 1 16 0v10" stroke-linecap="round"/>
+            <circle cx="12" cy="11" r="3" fill="currentColor"/>
+            <path d="M2 21h20" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-terracotta-600 block leading-none">MYP Español • Fase 3</span>
+          <h1 class="font-serif font-bold text-base sm:text-lg text-slate-900 leading-tight">Aventura Cultural por España</h1>
+        </div>
+      </div>
+
+      <!-- Score & Streak Pill -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-1.5 bg-saffron-100 border border-saffron-300 text-saffron-800 px-3 py-1 rounded-full text-xs sm:text-sm font-bold shadow-xs" title="Puntos culturales">
+          <span>⭐</span>
+          <span id="score-display">0</span> <span class="hidden sm:inline">pts</span>
+        </div>
+        <div class="flex items-center gap-1.5 bg-terracotta-100 border border-terracotta-200 text-terracotta-800 px-3 py-1 rounded-full text-xs sm:text-sm font-bold shadow-xs" title="Racha de respuestas correctas">
+          <span>🔥</span>
+          <span id="streak-display">0</span>
+        </div>
+      </div>
+
+      <!-- Scaffold Buttons (Always Accessible) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-end pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+        <button onclick="openModal('modal-vocab')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-azulejo-50 hover:bg-azulejo-100 text-azulejo-800 border border-azulejo-200 text-xs font-semibold transition cursor-pointer">
+          <span>📖</span> <span>Vocabulario</span>
+        </button>
+        <button onclick="openModal('modal-future')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-olive-50 hover:bg-olive-100 text-olive-800 border border-olive-200 text-xs font-semibold transition cursor-pointer">
+          <span>⏳</span> <span>Futuro Simple</span>
+        </button>
+        <button onclick="openModal('modal-letter-guide')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-800 border border-terracotta-200 text-xs font-semibold transition cursor-pointer">
+          <span>✉️</span> <span>Carta Formal</span>
+        </button>
+        <button onclick="openModal('modal-passport')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition shadow-xs cursor-pointer">
+          <span>🛂</span> <span>Pasaporte (<span id="stamp-count">0</span>/4)</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- INTERACTIVE VOCABULARY TOOLTIP BANNER (Appears when clicking any highlighted word) -->
+  <div id="vocab-toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 hidden max-w-md w-[92%] bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-azulejo-400 transition-all">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <span class="text-[10px] uppercase tracking-wider text-azulejo-300 font-bold block">Glosario Rápido (Ayuda)</span>
+        <p id="vocab-toast-word" class="font-serif font-bold text-base text-saffron-300"></p>
+        <p id="vocab-toast-def" class="text-xs sm:text-sm text-slate-200 mt-0.5"></p>
+      </div>
+      <button onclick="hideVocabToast()" class="text-slate-400 hover:text-white p-1 text-sm font-bold cursor-pointer">✕</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main id="app-container" class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <!-- Dynamic Views Render Here -->
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white/80 border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-500">
+    <p>Diseñado para estudiantes de <strong>Español MYP Fase 3</strong> • Cultura Regional de España, Futuro Simple y La Carta Formal.</p>
+    <p class="mt-1 text-[11px] text-slate-400">Consejo: Haz clic en las palabras subrayadas en azul <span class="vocab-term text-slate-700">como esta</span> para ver su significado.</p>
+  </footer>
+
+  <!-- ==================== SCAFFOLD MODALS ==================== -->
+
+  <!-- MODAL 1: VOCABULARIO CLAVE -->
+  <div id="modal-vocab" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" onclick="closeModalOnBackdrop(event, 'modal-vocab')">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border-2 border-azulejo-500 overflow-hidden">
+      <div class="bg-azulejo-700 text-white px-5 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="font-serif font-bold text-lg sm:text-xl">📖 Vocabulario Clave del Viaje</h2>
+          <p class="text-xs text-azulejo-100">Palabras útiles para entender la cultura, el futuro y las cartas formales.</p>
+        </div>
+        <button onclick="closeModal('modal-vocab')" class="bg-azulejo-800 hover:bg-azulejo-900 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-4 text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="vocab-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: GUÍA DEL FUTURO SIMPLE -->
+  <div id="modal-future" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" onclick="closeModalOnBackdrop(event, 'modal-future')">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border-2 border-olive-600 overflow-hidden">
+      <div class="bg-olive-700 text-white px-5 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="font-serif font-bold text-lg sm:text-xl">⏳ Guía Rápida: El Futuro Simple</h2>
+          <p class="text-xs text-olive-100">Para hablar de planes, viajes y acciones en el futuro (will + verb).</p>
+        </div>
+        <button onclick="closeModal('modal-future')" class="bg-olive-800 hover:bg-olive-900 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-5 text-sm">
+        <!-- Regular Verbs -->
+        <div class="bg-olive-50 border border-olive-200 rounded-xl p-4">
+          <h3 class="font-bold text-olive-900 text-base mb-1">1. Verbos Regulares (Infinitivo + Terminación)</h3>
+          <p class="text-slate-600 text-xs mb-3">¡Es muy fácil! No quitas -ar, -er, o -ir. Solo añades la terminación al verbo completo (ej. <strong>viajar</strong> + <strong>é</strong> = <strong>viajaré</strong>).</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+            <div class="bg-white p-2.5 rounded-lg border border-olive-200">
+              <span class="text-slate-500 block">Yo</span>
+              <strong class="text-olive-800 text-sm">-é</strong> <span class="text-slate-600">(visitar<strong>é</strong>)</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-olive-200">
+              <span class="text-slate-500 block">Tú</span>
+              <strong class="text-olive-800 text-sm">-ás</strong> <span class="text-slate-600">(comer<strong>ás</strong>)</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-olive-200">
+              <span class="text-slate-500 block">Él / Ella / Usted</span>
+              <strong class="text-olive-800 text-sm">-á</strong> <span class="text-slate-600">(vivir<strong>á</strong>)</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-olive-200">
+              <span class="text-slate-500 block">Nosotros/as</span>
+              <strong class="text-olive-800 text-sm">-emos</strong> <span class="text-slate-600">(ir<strong>emos</strong>)</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-olive-200">
+              <span class="text-slate-500 block">Vosotros/as</span>
+              <strong class="text-olive-800 text-sm">-éis</strong> <span class="text-slate-600">(viajar<strong>éis</strong>)</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-olive-200">
+              <span class="text-slate-500 block">Ellos / Ellas / Ustedes</span>
+              <strong class="text-olive-800 text-sm">-án</strong> <span class="text-slate-600">(aprender<strong>án</strong>)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Irregular Stems -->
+        <div class="bg-saffron-50 border border-saffron-200 rounded-xl p-4">
+          <h3 class="font-bold text-saffron-900 text-base mb-1">2. Verbos Irregulares Importantes</h3>
+          <p class="text-slate-600 text-xs mb-3">Cambian la raíz (stem), pero usan las <strong>mismas terminaciones</strong> (-é, -ás, -á, -emos, -éis, -án):</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div class="bg-white p-2.5 rounded-lg border border-saffron-200 flex justify-between">
+              <span><strong>Tener</strong> (to have) → <span class="text-terracotta-700 font-bold">tendr-</span></span>
+              <span class="text-slate-600">tendremos</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-saffron-200 flex justify-between">
+              <span><strong>Hacer</strong> (to do/make) → <span class="text-terracotta-700 font-bold">har-</span></span>
+              <span class="text-slate-600">haremos</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-saffron-200 flex justify-between">
+              <span><strong>Salir</strong> (to leave) → <span class="text-terracotta-700 font-bold">saldr-</span></span>
+              <span class="text-slate-600">saldremos</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-saffron-200 flex justify-between">
+              <span><strong>Poder</strong> (can/able) → <span class="text-terracotta-700 font-bold">podr-</span></span>
+              <span class="text-slate-600">podremos</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-saffron-200 flex justify-between">
+              <span><strong>Haber</strong> (there will be) → <span class="text-terracotta-700 font-bold">habr-</span></span>
+              <span class="text-slate-600">habrá</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-saffron-200 flex justify-between">
+              <span><strong>Venir</strong> (to come) → <span class="text-terracotta-700 font-bold">vendr-</span></span>
+              <span class="text-slate-600">vendrán</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: GUÍA DE LA CARTA FORMAL -->
+  <div id="modal-letter-guide" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" onclick="closeModalOnBackdrop(event, 'modal-letter-guide')">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border-2 border-terracotta-500 overflow-hidden">
+      <div class="bg-terracotta-700 text-white px-5 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="font-serif font-bold text-lg sm:text-xl">✉️ Estructura de la Carta Formal en Español</h2>
+          <p class="text-xs text-terracotta-100">Cómo escribir con respeto a instituciones, directores o museos.</p>
+        </div>
+        <button onclick="closeModal('modal-letter-guide')" class="bg-terracotta-800 hover:bg-terracotta-900 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-4 text-sm">
+        <div class="bg-terracotta-50 border border-terracotta-200 rounded-xl p-4 space-y-2.5">
+          <div class="flex items-start gap-2.5">
+            <span class="bg-terracotta-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">1</span>
+            <div>
+              <strong class="text-slate-900">Lugar y fecha (arriba a la derecha):</strong>
+              <p class="text-xs text-slate-600">Ejemplo: <em>Granada, 17 de noviembre de 2026</em> (En español los meses van en minúscula).</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="bg-terracotta-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">2</span>
+            <div>
+              <strong class="text-slate-900">Datos del destinatario (a quién escribes):</strong>
+              <p class="text-xs text-slate-600">Nombre, cargo (Director/a) e institución (Patronato de la Alhambra).</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="bg-terracotta-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">3</span>
+            <div>
+              <strong class="text-slate-900">Saludo formal (con dos puntos <code>:</code>):</strong>
+              <p class="text-xs text-slate-600"><em>Estimado Sr. Director:</em> / <em>Estimada Sra. Directora:</em> (¡En español usamos <strong>dos puntos :</strong> y NO coma!).</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="bg-terracotta-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">4</span>
+            <div>
+              <strong class="text-slate-900">Cuerpo de la carta (Registro formal: Usted / Ustedes):</strong>
+              <p class="text-xs text-slate-600">Usa <strong>usted</strong> (no <em>tú</em>). Explica el motivo con cortesía (<em>Le escribo para solicitar...</em>) y usa el <strong>futuro simple</strong> para tus planes (<em>Visitaremos, aprenderemos...</em>).</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="bg-terracotta-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">5</span>
+            <div>
+              <strong class="text-slate-900">Despedida formal y Firma:</strong>
+              <p class="text-xs text-slate-600"><em>Atentamente,</em> o <em>Cordialmente,</em> seguido de tu nombre y colegio.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: PASAPORTE CULTURAL -->
+  <div id="modal-passport" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" onclick="closeModalOnBackdrop(event, 'modal-passport')">
+    <div class="bg-[#fcf8f0] rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl border-4 border-azulejo-800 overflow-hidden">
+      <div class="bg-azulejo-900 text-saffron-300 px-5 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">🛂</span>
+          <div>
+            <h2 class="font-serif font-bold text-lg sm:text-xl tracking-wide">PASAPORTE CULTURAL DE ESPAÑA</h2>
+            <p class="text-xs text-azulejo-200">Colecciona los 4 sellos oficiales para completar tu misión.</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-passport')" class="bg-azulejo-800 hover:bg-azulejo-700 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="passport-stamps-grid">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-slate-200 text-center text-xs text-slate-600">
+          Completa todas las regiones y envía tu <strong>Carta Formal</strong> para desbloquear tu Certificado de Embajador/a Cultural.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    // ==========================================
+    // 1. VOCABULARY & PEDAGOGICAL DATA
+    // ==========================================
+    const VOCABULARY_DB = {
+      "azulejos": { word: "Los azulejos", def: "Ceramic decorative tiles typical in Andalucía (piezas de cerámica decoradas muy típicas en Andalucía)." },
+      "patrimonio": { word: "El patrimonio cultural", def: "Cultural heritage; historic monuments, art, and traditions passed down through generations." },
+      "mudéjar": { word: "El arte mudéjar", def: "Unique Spanish architectural style blending Islamic and Christian geometric designs." },
+      "itinerario": { word: "El itinerario", def: "Travel itinerary or planned route of places to visit." },
+      "gastronomía": { word: "La gastronomía", def: "Traditional food, dishes, and culinary culture of a region." },
+      "destinatario": { word: "El destinatario", def: "The recipient; the person or organization receiving a formal letter." },
+      "solicitar": { word: "Solicitar (verbo)", def: "To formally request or apply for something (used in formal letters)." },
+      "atentamente": { word: "Atentamente", def: "Sincerely / Yours faithfully — standard formal closing in Spanish letters." },
+      "modernismo": { word: "El modernismo", def: "Catalan Art Nouveau architectural movement led by Antoni Gaudí in Barcelona." },
+      "huerta": { word: "La huerta", def: "Fertile agricultural land around Valencia where oranges and rice for paella grow." },
+      "intercambio": { word: "El intercambio cultural", def: "Cultural exchange between students or schools from different places." },
+      "alhambra": { word: "La Alhambra", def: "Famous Nasrid palace and fortress complex in Granada, Andalucía." }
+    };
+
+    // Helper function to wrap vocabulary terms with interactive tooltip triggers
+    function v(key, displayText) {
+      return `<span class="vocab-term font-medium text-azulejo-900" onclick="showVocabToast('${key}')">${displayText || key}</span>`;
+    }
+
+    // ==========================================
+    // 2. REGIONAL STAGES & CONTENT DATA
+    // ==========================================
+    const STAGES = [
+      {
+        id: "andalucia",
+        number: 1,
+        badge: "Misión Principal • Sur de España",
+        title: "Andalucía: Sevilla y Granada",
+        subtitle: "Tierra de luz, arte mudéjar, flamenco y los patios más bonitos de España.",
+        themeColor: "terracotta",
+        stampTitle: "SELLO DE ANDALUCÍA",
+        stampIcon: "🕌",
+        cultureCards: [
+          {
+            title: "Granada y La Alhambra",
+            icon: "🏰",
+            text: `En Granada visitaremos ${v('alhambra', 'La Alhambra')}, un palacio histórico famoso por su arquitectura ${v('mudéjar', 'mudéjar')}, sus jardines del Generalife y sus fuentes de agua.`
+          },
+          {
+            title: "Sevilla y la Plaza de España",
+            icon: "💃",
+            text: `Sevilla es la capital de Andalucía. Allí admiraremos los ${v('azulejos', 'azulejos')} de colores de la Plaza de España y escucharemos música flamenco tradicional.`
+          },
+          {
+            title: "Gastronomía y Tradición",
+            icon: "🫒",
+            text: `La ${v('gastronomía', 'gastronomía')} andaluza incluye el gazpacho frío, las tapas compartidas con amigos y el aceite de oliva de sus campos de olivos.`
+          }
+        ],
+        challenges: [
+          {
+            type: "mcq",
+            prompt: "Estás planificando el viaje de tu clase a Granada. Completa la frase en <strong>futuro simple</strong>:<br><span class='block mt-2 p-3 bg-terracotta-50 rounded-xl border border-terracotta-200 text-slate-900 font-medium'>\"Mañana por la mañana, nosotros _________ los jardines de La Alhambra con un guía.\"</span>",
+            options: [
+              { text: "visitaremos", correct: true, feedback: "¡Excelente! 'Nosotros' + futuro regular (-emos) = visitaremos." },
+              { text: "visitamos", correct: false, feedback: "'Visitamos' está en presente. Para el futuro con 'nosotros', usa la terminación -emos." },
+              { text: "visitarán", correct: false, feedback: "'Visitarán' es para 'ellos/ustedes'. Aquí el sujeto es 'nosotros'." }
+            ]
+          },
+          {
+            type: "mcq",
+            prompt: "En Sevilla hace buen tiempo y hay mucha cultura. Elige la forma correcta de <strong>haber</strong> (there will be) en futuro:<br><span class='block mt-2 p-3 bg-terracotta-50 rounded-xl border border-terracotta-200 text-slate-900 font-medium'>\"En la fiesta cultural de Sevilla _________ música flamenco y tapas tradicionales.\"</span>",
+            options: [
+              { text: "habrá", correct: true, feedback: "¡Muy bien! 'Habrá' es el futuro irregular de 'haber' (there will be)." },
+              { text: "haberá", correct: false, feedback: "¡Cuidado! 'Haber' es irregular en futuro: su raíz es 'habr-' → habrá." },
+              { text: "habrán", correct: false, feedback: "Como verbo impersonal (there will be), siempre se usa en singular: 'habrá'." }
+            ]
+          },
+          {
+            type: "mcq",
+            prompt: "¿Qué característica artística es muy famosa en la Plaza de España de Sevilla?",
+            options: [
+              { text: "Los bancos decorados con azulejos de cerámica pintados", correct: true, feedback: "¡Correcto! Los azulejos representan todas las provincias de España." },
+              { text: "Los rascacielos modernos de cristal", correct: false, feedback: "No, la Plaza de España es famosa por su arquitectura histórica de ladrillo y azulejos." },
+              { text: "Las pistas de esquí dentro de la plaza", correct: false, feedback: "¡En Sevilla hace mucho calor! La plaza tiene un canal con barcas y puentes." }
+            ]
+          }
+        ]
+      },
+      {
+        id: "madrid",
+        number: 2,
+        badge: "Etapa 2 • Centro de España",
+        title: "Madrid: Arte y Capital",
+        subtitle: "Museos mundiales, parques históricos y el corazón vibrante del país.",
+        themeColor: "saffron",
+        stampTitle: "SELLO DE MADRID",
+        stampIcon: "👑",
+        cultureCards: [
+          {
+            title: "El Triángulo del Arte",
+            icon: "🎨",
+            text: `En Madrid está el Museo del Prado, donde veremos obras maestras de Velázquez y Goya, esenciales para el ${v('patrimonio', 'patrimonio')} español.`
+          },
+          {
+            title: "El Parque del Retiro",
+            icon: "🌳",
+            text: `Es un parque enorme en el centro de la ciudad con el Palacio de Cristal y un estanque donde las familias pasean los domingos.`
+          },
+          {
+            title: "La Puerta del Sol y el Kilómetro Cero",
+            icon: "🧭",
+            text: `En la Puerta del Sol está el punto exacto donde empiezan todas las carreteras de España y donde se comen las 12 uvas en Nochevieja.`
+          }
+        ],
+        challenges: [
+          {
+            type: "mcq",
+            prompt: "Practica los <strong>verbos irregulares en futuro</strong>. Completa el plan de tu grupo en Madrid:<br><span class='block mt-2 p-3 bg-saffron-50 rounded-xl border border-saffron-300 text-slate-900 font-medium'>\"Nosotros _________ (salir) del hotel a las nueve y _________ (tener) una visita al Museo del Prado.\"</span>",
+            options: [
+              { text: "saldremos / tendremos", correct: true, feedback: "¡Fantástico! 'Salir' → saldr- y 'Tener' → tendr-. ¡Dominas los irregulares!" },
+              { text: "saliremos / teneremos", correct: false, feedback: "Recuerda que 'salir' y 'tener' son irregulares en futuro (añaden una 'd': saldr-, tendr-)." },
+              { text: "saldrán / tendrán", correct: false, feedback: "Esas formas son para 'ellos'. El sujeto aquí es 'nosotros' (-emos)." }
+            ]
+          },
+          {
+            type: "mcq",
+            prompt: "¿Qué verbo irregular completa correctamente esta oración?<br><span class='block mt-2 p-3 bg-saffron-50 rounded-xl border border-saffron-300 text-slate-900 font-medium'>\"Por la tarde, tú _________ (hacer) un picnic en el Parque del Retiro.\"</span>",
+            options: [
+              { text: "harás", correct: true, feedback: "¡Perfecto! La raíz irregular de 'hacer' es 'har-', más '-ás' para 'tú'." },
+              { text: "hacerás", correct: false, feedback: "'Hacer' pierde la 'ce' en futuro: su raíz es 'har-' → harás." },
+              { text: "haré", correct: false, feedback: "'Haré' es para 'yo'. Para 'tú' termina en '-ás': harás." }
+            ]
+          }
+        ]
+      },
+      {
+        id: "mediterraneo",
+        number: 3,
+        badge: "Etapa 3 • Costa Mediterránea",
+        title: "Barcelona y Valencia",
+        subtitle: "Arquitectura modernista, cultura mediterránea y tradiciones festivas.",
+        themeColor: "azulejo",
+        stampTitle: "SELLO MEDITERRÁNEO",
+        stampIcon: "⛵",
+        cultureCards: [
+          {
+            title: "Barcelona y el Modernismo",
+            icon: "⛪",
+            text: `En Cataluña, el arquitecto Antoni Gaudí creó la Sagrada Familia y el Park Güell, ejemplos únicos del ${v('modernismo', 'modernismo')} catalán con formas de la naturaleza.`
+          },
+          {
+            title: "Valencia: Ciencia y Huerta",
+            icon: "🍊",
+            text: `Valencia combina la futurista Ciudad de las Artes y las Ciencias con la tradicional ${v('huerta', 'huerta')}, donde nacieron las naranjas valencianas y la paella.`
+          },
+          {
+            title: "Las Fallas y Lenguas Cooficiales",
+            icon: "🎆",
+            text: `En estas regiones, además del español, se hablan lenguas propias como el catalán y el valenciano, enriqueciendo la diversidad cultural de España.`
+          }
+        ],
+        challenges: [
+          {
+            type: "mcq",
+            prompt: "Completa el ${v('itinerario', 'itinerario')} por la costa mediterránea:<br><span class='block mt-2 p-3 bg-azulejo-50 rounded-xl border border-azulejo-200 text-slate-900 font-medium'>\"En Valencia, los estudiantes _________ (poder) probar una paella auténtica y _________ (aprender) sobre la agricultura local.\"</span>",
+            options: [
+              { text: "podrán / aprenderán", correct: true, feedback: "¡Genial! 'Poder' es irregular (podr-) y 'aprender' es regular (aprender-)." },
+              { text: "poderán / aprenderán", correct: false, feedback: "'Poder' pierde la 'e' en futuro: la raíz es 'podr-' → podrán." },
+              { text: "podremos / aprenderemos", correct: false, feedback: "El sujeto es 'los estudiantes' (ellos), por eso termina en '-án'." }
+            ]
+          },
+          {
+            type: "mcq",
+            prompt: "¿Cuál de estas afirmaciones sobre Barcelona y Valencia es verdadera?",
+            options: [
+              { text: "En ambas regiones existen lenguas cooficiales además del español y una arquitectura muy creativa.", correct: true, feedback: "¡Exacto! España es un país multilingüe y multicultural." },
+              { text: "Ambas ciudades están en el norte frío de España cerca de Francia.", correct: false, feedback: "Están en la costa este, junto al Mar Mediterráneo." },
+              { text: "La paella es un postre dulce típico de Madrid.", correct: false, feedback: "La paella es un plato tradicional de arroz originario de Valencia." }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // ==========================================
+    // 3. FORMAL LETTER WORKSHOP DATA (STAGE 4)
+    // ==========================================
+    const LETTER_ORDER_BLOCKS = [
+      { id: "date", label: "Lugar y fecha", sample: "Sevilla, 17 de noviembre de 2026" },
+      { id: "recipient", label: "Datos del destinatario", sample: "Sr. D. Alejandro Morales — Director del Patronato Cultural de Andalucía" },
+      { id: "salutation", label: "Saludo formal (con dos puntos :)", sample: "Estimado Sr. Director:" },
+      { id: "body", label: "Cuerpo de la carta (Usted + Futuro)", sample: "Le escribo en nombre de mi clase de Español MYP..." },
+      { id: "closing", label: "Despedida formal y Firma", sample: "Atentamente, Estudiante Embajador/a" }
+    ];
+
+    // ==========================================
+    // 4. APPLICATION STATE
+    // ==========================================
+    const state = {
+      currentView: "home", // 'home' | 'stage' | 'letter' | 'certificate'
+      activeStageIndex: 0,
+      activeChallengeIndex: 0,
+      score: 0,
+      streak: 0,
+      stamps: {
+        andalucia: false,
+        madrid: false,
+        mediterraneo: false,
+        carta: false
+      },
+      // Letter workshop sub-steps
+      letterStep: 1, // 1: Order structure, 2: Formal vs Informal register, 3: Complete letter with Future Tense
+      orderedList: [],
+      registerAnswers: { q1: null, q2: null },
+      letterBlanks: {
+        salutation: "",
+        verb1: "",
+        verb2: "",
+        verb3: "",
+        pronoun: "",
+        closing: "",
+        studentName: "Alex Rivera",
+        schoolName: "Colegio Internacional MYP"
+      }
+    };
+
+    // ==========================================
+    // 5. CUSTOM SVG ARTWORK GENERATORS
+    // ==========================================
+    function getHeroSVG() {
+      return `
+        <svg viewBox="0 0 600 240" class="w-full h-auto rounded-2xl shadow-md border border-terracotta-200 bg-gradient-to-b from-azulejo-100 via-saffron-50 to-terracotta-100">
+          <!-- Warm Andalusian Sun -->
+          <circle cx="490" cy="65" r="36" fill="#facc15" opacity="0.85"/>
+          <circle cx="490" cy="65" r="26" fill="#eab308"/>
+          
+          <!-- Distant Sierra Nevada Mountains -->
+          <path d="M0 175 L110 105 L210 165 L320 95 L440 160 L540 110 L600 155 L600 240 L0 240 Z" fill="#8fad73" opacity="0.45"/>
+          <path d="M295 110 L320 95 L345 112 L330 116 L320 108 L310 115 Z" fill="#ffffff" opacity="0.85"/>
+
+          <!-- La Alhambra / Mudéjar Palace Silhouette -->
+          <g transform="translate(55, 78)">
+            <!-- Main Tower -->
+            <rect x="20" y="25" width="75" height="95" rx="3" fill="#d96338"/>
+            <rect x="15" y="18" width="85" height="10" rx="2" fill="#a23b1d"/>
+            <!-- Battlements -->
+            <rect x="20" y="12" width="10" height="6" fill="#a23b1d"/>
+            <rect x="40" y="12" width="10" height="6" fill="#a23b1d"/>
+            <rect x="60" y="12" width="10" height="6" fill="#a23b1d"/>
+            <rect x="80" y="12" width="10" height="6" fill="#a23b1d"/>
+            <!-- Horseshoe Arch Windows -->
+            <path d="M38 65 A10 10 0 1 1 58 65 L58 82 L38 82 Z" fill="#fef08a"/>
+            <path d="M65 65 A10 10 0 1 1 85 65 L85 82 L65 82 Z" fill="#fef08a"/>
+            
+            <!-- Gallery Wing with Arches -->
+            <rect x="95" y="52" width="145" height="68" fill="#e58763"/>
+            <path d="M110 120 L110 85 A12 12 0 1 1 134 85 L134 120 Z" fill="#6e2d1c"/>
+            <path d="M152 120 L152 85 A12 12 0 1 1 176 85 L176 120 Z" fill="#6e2d1c"/>
+            <path d="M194 120 L194 85 A12 12 0 1 1 218 85 L218 120 Z" fill="#6e2d1c"/>
+          </g>
+
+          <!-- Cypress Trees -->
+          <path d="M35 198 Q43 130 51 198 Z" fill="#435932"/>
+          <path d="M315 198 Q324 120 333 198 Z" fill="#55723e"/>
+          <path d="M545 198 Q554 135 563 198 Z" fill="#435932"/>
+
+          <!-- Azulejo Decorative Fountain & Ground -->
+          <rect x="0" y="196" width="600" height="44" fill="#0074c5"/>
+          <!-- Tile Pattern Strip -->
+          <g fill="#facc15" opacity="0.9">
+            <rect x="20" y="204" width="14" height="14" transform="rotate(45 27 211)"/>
+            <rect x="70" y="204" width="14" height="14" transform="rotate(45 77 211)"/>
+            <rect x="120" y="204" width="14" height="14" transform="rotate(45 127 211)"/>
+            <rect x="170" y="204" width="14" height="14" transform="rotate(45 177 211)"/>
+            <rect x="220" y="204" width="14" height="14" transform="rotate(45 227 211)"/>
+            <rect x="270" y="204" width="14" height="14" transform="rotate(45 277 211)"/>
+            <rect x="320" y="204" width="14" height="14" transform="rotate(45 327 211)"/>
+            <rect x="370" y="204" width="14" height="14" transform="rotate(45 377 211)"/>
+            <rect x="420" y="204" width="14" height="14" transform="rotate(45 427 211)"/>
+            <rect x="470" y="204" width="14" height="14" transform="rotate(45 477 211)"/>
+            <rect x="520" y="204" width="14" height="14" transform="rotate(45 527 211)"/>
+            <rect x="570" y="204" width="14" height="14" transform="rotate(45 577 211)"/>
+          </g>
+        </svg>
+      `;
+    }
+
+    function getStageIllustrationSVG(stageId) {
+      if (stageId === "andalucia") {
+        return `
+          <svg viewBox="0 0 400 150" class="w-full h-36 sm:h-44 rounded-xl bg-gradient-to-r from-terracotta-100 via-saffron-50 to-terracotta-100 border border-terracotta-200">
+            <!-- Patio Cordobés / Sevillano Arches -->
+            <rect x="0" y="125" width="400" height="25" fill="#c34b24"/>
+            <path d="M40 125 L40 55 A35 35 0 0 1 110 55 L110 125" fill="none" stroke="#85331d" stroke-width="10"/>
+            <path d="M165 125 L165 55 A35 35 0 0 1 235 55 L235 125" fill="none" stroke="#85331d" stroke-width="10"/>
+            <path d="M290 125 L290 55 A35 35 0 0 1 360 55 L360 125" fill="none" stroke="#85331d" stroke-width="10"/>
+            <!-- Hanging Flower Pots (Macetas azules) -->
+            <circle cx="22" cy="52" r="9" fill="#0074c5"/><circle cx="22" cy="43" r="7" fill="#e11d48"/>
+            <circle cx="138" cy="52" r="9" fill="#0074c5"/><circle cx="138" cy="43" r="7" fill="#e11d48"/>
+            <circle cx="262" cy="52" r="9" fill="#0074c5"/><circle cx="262" cy="43" r="7" fill="#e11d48"/>
+            <circle cx="378" cy="52" r="9" fill="#0074c5"/><circle cx="378" cy="43" r="7" fill="#e11d48"/>
+            <!-- Fountain in center -->
+            <ellipse cx="200" cy="122" rx="34" ry="8" fill="#0c93e7"/>
+            <path d="M200 120 Q190 95 182 108 M200 120 Q210 95 218 108" stroke="#7cc8fb" stroke-width="2.5" fill="none"/>
+          </svg>
+        `;
+      }
+      if (stageId === "madrid") {
+        return `
+          <svg viewBox="0 0 400 150" class="w-full h-36 sm:h-44 rounded-xl bg-gradient-to-r from-azulejo-100 via-saffron-50 to-olive-100 border border-saffron-300">
+            <!-- Puerta de Alcalá / Prado Columns -->
+            <rect x="0" y="125" width="400" height="25" fill="#6f9052"/>
+            <rect x="75" y="45" width="250" height="80" rx="4" fill="#f5e6c8" stroke="#b49a67" stroke-width="2"/>
+            <polygon points="65,45 200,15 335,45" fill="#c34b24"/>
+            <!-- Classical Columns -->
+            <rect x="95" y="45" width="12" height="80" fill="#ffffff" stroke="#d6c5a3"/>
+            <rect x="135" y="45" width="12" height="80" fill="#ffffff" stroke="#d6c5a3"/>
+            <rect x="253" y="45" width="12" height="80" fill="#ffffff" stroke="#d6c5a3"/>
+            <rect x="293" y="45" width="12" height="80" fill="#ffffff" stroke="#d6c5a3"/>
+            <!-- Grand Archway -->
+            <path d="M175 125 L175 80 A25 25 0 0 1 225 80 L225 125 Z" fill="#475569"/>
+            <circle cx="200" cy="32" r="7" fill="#eab308"/>
+          </svg>
+        `;
+      }
+      return `
+        <svg viewBox="0 0 400 150" class="w-full h-36 sm:h-44 rounded-xl bg-gradient-to-b from-azulejo-200 to-azulejo-50 border border-azulejo-300">
+          <!-- Mediterranean Sea -->
+          <rect x="0" y="115" width="400" height="35" fill="#0284c7"/>
+          <path d="M0 125 Q40 118 80 125 T160 125 T240 125 T320 125 T400 125" stroke="#bae0fd" stroke-width="2" fill="none"/>
+          <!-- Modernist Towers (Sagrada Familia inspired) -->
+          <path d="M85 115 L98 22 L111 115 Z" fill="#e58763"/>
+          <path d="M115 115 L130 14 L145 115 Z" fill="#d96338"/>
+          <path d="M148 115 L161 25 L174 115 Z" fill="#e58763"/>
+          <circle cx="130" cy="14" r="5" fill="#facc15"/>
+          <!-- Valencia Futuristic Arch (Ciudad de las Artes) -->
+          <path d="M225 115 Q285 35 345 115 Z" fill="#ffffff" stroke="#0c93e7" stroke-width="3"/>
+          <path d="M245 115 Q285 60 325 115" fill="none" stroke="#36adf6" stroke-width="2"/>
+        </svg>
+      `;
+    }
+
+    // ==========================================
+    // 6. UI & NAVIGATION HELPERS
+    // ==========================================
+    function updateTopBar() {
+      document.getElementById("score-display").textContent = state.score;
+      document.getElementById("streak-display").textContent = state.streak;
+      const earnedCount = Object.values(state.stamps).filter(Boolean).length;
+      document.getElementById("stamp-count").textContent = earnedCount;
+    }
+
+    function showVocabToast(key) {
+      const item = VOCABULARY_DB[key];
+      if (!item) return;
+      document.getElementById("vocab-toast-word").textContent = item.word;
+      document.getElementById("vocab-toast-def").textContent = item.def;
+      const toast = document.getElementById("vocab-toast");
+      toast.classList.remove("hidden");
+    }
+
+    function hideVocabToast() {
+      document.getElementById("vocab-toast").classList.add("hidden");
+    }
+
+    function openModal(id) {
+      if (id === "modal-vocab") renderVocabModal();
+      if (id === "modal-passport") renderPassportModal();
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add("hidden");
+    }
+
+    function closeModalOnBackdrop(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    function goHome() {
+      state.currentView = "home";
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startStage(index) {
+      state.currentView = "stage";
+      state.activeStageIndex = index;
+      state.activeChallengeIndex = 0;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startLetterMission() {
+      state.currentView = "letter";
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openCertificate() {
+      state.currentView = "certificate";
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // ==========================================
+    // 7. RENDER MODALS
+    // ==========================================
+    function renderVocabModal() {
+      const container = document.getElementById("vocab-list-container");
+      container.innerHTML = Object.values(VOCABULARY_DB).map(item => `
+        <div class="bg-azulejo-50/70 border border-azulejo-200 rounded-xl p-3">
+          <strong class="text-azulejo-900 block font-serif">${item.word}</strong>
+          <span class="text-xs text-slate-600">${item.def}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderPassportModal() {
+      const grid = document.getElementById("passport-stamps-grid");
+      const stampItems = [
+        { key: "andalucia", title: "Andalucía", sub: "Sevilla y Granada", icon: "🕌", color: "terracotta" },
+        { key: "madrid", title: "Madrid", sub: "Arte y Capital", icon: "👑", color: "saffron" },
+        { key: "mediterraneo", title: "Costa Mediterránea", sub: "Barcelona y Valencia", icon: "⛵", color: "azulejo" },
+        { key: "carta", title: "Carta Formal", sub: "Diplomacia Cultural", icon: "✉️", color: "olive" }
+      ];
+
+      grid.innerHTML = stampItems.map(s => {
+        const earned = state.stamps[s.key];
+        return `
+          <div class="relative rounded-xl border-2 ${earned ? 'border-terracotta-500 bg-white shadow-sm' : 'border-dashed border-slate-300 bg-slate-50/70'} p-4 flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl ${earned ? 'bg-saffron-100 border-2 border-terracotta-500 stamp-earned' : 'bg-slate-200 grayscale opacity-50'}">
+              ${s.icon}
+            </div>
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider ${earned ? 'text-olive-700' : 'text-slate-400'}">
+                ${earned ? '✓ SELLO OBTENIDO' : 'PENDIENTE'}
+              </span>
+              <h4 class="font-serif font-bold text-slate-900 text-sm">${s.title}</h4>
+              <p class="text-xs text-slate-500">${s.sub}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // ==========================================
+    // 8. RENDER HOME HUB VIEW
+    // ==========================================
+    function renderHome() {
+      const earnedCount = Object.values(state.stamps).filter(Boolean).length;
+      const allCompleted = earnedCount === 4;
+
+      return `
+        <div class="space-y-6">
+          <!-- Hero Card -->
+          <section class="bg-white rounded-3xl p-5 sm:p-8 shadow-md border border-slate-200/90">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div class="lg:col-span-6 space-y-3">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-terracotta-100 text-terracotta-800 text-xs font-bold">
+                  <span>🇪🇸</span> <span>Exploración Cultural • MYP Español Fase 3</span>
+                </div>
+                <h2 class="font-serif font-bold text-2xl sm:text-3xl text-slate-900 leading-tight">
+                  ¡Bienvenido/a a tu Misión por Andalucía y España!
+                </h2>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                  Viajarás por regiones emblemáticas de España —empezando por <strong>Andalucía</strong>—, practicarás el <strong>futuro simple</strong> para organizar tu ${v('itinerario', 'itinerario')} y escribirás una <strong>carta formal</strong> oficial para solicitar una visita cultural.
+                </p>
+                <div class="pt-2 flex flex-wrap gap-2.5">
+                  <button onclick="startStage(0)" class="px-5 py-2.5 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold text-sm shadow-sm transition cursor-pointer flex items-center gap-2">
+                    <span>🚀</span> <span>${state.stamps.andalucia ? 'Repasar Andalucía' : 'Empezar en Andalucía'}</span>
+                  </button>
+                  <button onclick="startLetterMission()" class="px-4 py-2.5 rounded-xl bg-azulejo-50 hover:bg-azulejo-100 text-azulejo-800 border border-azulejo-200 font-semibold text-sm transition cursor-pointer flex items-center gap-2">
+                    <span>✉️</span> <span>Ir a la Carta Formal</span>
+                  </button>
+                </div>
+              </div>
+              <div class="lg:col-span-6">
+                ${getHeroSVG()}
+              </div>
+            </div>
+          </section>
+
+          <!-- Progress Banner if All 4 Completed -->
+          ${allCompleted ? `
+            <div class="bg-gradient-to-r from-olive-600 to-azulejo-700 text-white rounded-2xl p-5 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">🏆</span>
+                <div>
+                  <h3 class="font-serif font-bold text-lg">¡Misión Completada! Tienes los 4 Sellos Culturales</h3>
+                  <p class="text-xs sm:text-sm text-olive-100">Ya puedes ver e imprimir tu Certificado Oficial de Embajador/a Cultural y tu Carta Formal.</p>
+                </div>
+              </div>
+              <button onclick="openCertificate()" class="px-5 py-2.5 rounded-xl bg-saffron-400 hover:bg-saffron-300 text-slate-900 font-bold text-sm shadow-sm shrink-0 cursor-pointer">
+                Ver Certificado y Carta →
+              </button>
+            </div>
+          ` : ''}
+
+          <!-- Interactive Route Map / Mission Cards -->
+          <section>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-serif font-bold text-lg sm:text-xl text-slate-900">🗺️ Ruta de Exploración (4 Etapas)</h3>
+              <span class="text-xs font-semibold text-slate-500">Progreso: ${earnedCount} de 4 sellos</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Stages 1, 2, 3 -->
+              ${STAGES.map((stage, idx) => {
+                const isDone = state.stamps[stage.id];
+                const isFeatured = stage.id === "andalucia";
+                return `
+                  <div class="bg-white rounded-2xl p-5 border-2 ${isFeatured ? 'border-terracotta-400 ring-2 ring-terracotta-100' : 'border-slate-200'} shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between gap-2 mb-2">
+                        <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${isFeatured ? 'bg-terracotta-100 text-terracotta-800' : 'bg-slate-100 text-slate-700'}">
+                          ${stage.badge}
+                        </span>
+                        ${isDone 
+                          ? `<span class="text-xs font-bold text-olive-700 bg-olive-100 px-2.5 py-0.5 rounded-full">✓ Sello obtenido</span>`
+                          : `<span class="text-xs font-medium text-slate-400">Etapa ${stage.number}</span>`
+                        }
+                      </div>
+                      <div class="flex items-start gap-3 mt-2">
+                        <div class="w-12 h-12 rounded-2xl bg-saffron-50 border border-saffron-200 flex items-center justify-center text-2xl shrink-0">
+                          ${stage.stampIcon}
+                        </div>
+                        <div>
+                          <h4 class="font-serif font-bold text-lg text-slate-900">${stage.title}</h4>
+                          <p class="text-xs sm:text-sm text-slate-600 mt-1">${stage.subtitle}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <span class="text-xs text-slate-500">Cultura + Futuro Simple</span>
+                      <button onclick="startStage(${idx})" class="px-4 py-2 rounded-xl ${isDone ? 'bg-slate-100 hover:bg-slate-200 text-slate-800' : 'bg-azulejo-600 hover:bg-azulejo-700 text-white'} text-xs font-bold transition cursor-pointer">
+                        ${isDone ? 'Explorar de nuevo' : 'Explorar Región →'}
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+
+              <!-- Stage 4: Formal Letter Workshop Card -->
+              <div class="bg-gradient-to-br from-white to-azulejo-50/70 rounded-2xl p-5 border-2 ${state.stamps.carta ? 'border-olive-500' : 'border-azulejo-400'} shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-azulejo-100 text-azulejo-800">
+                      Etapa 4 • Taller de Escritura
+                    </span>
+                    ${state.stamps.carta 
+                      ? `<span class="text-xs font-bold text-olive-700 bg-olive-100 px-2.5 py-0.5 rounded-full">✓ Sello obtenido</span>`
+                      : `<span class="text-xs font-medium text-azulejo-700">Misión Final</span>`
+                    }
+                  </div>
+                  <div class="flex items-start gap-3 mt-2">
+                    <div class="w-12 h-12 rounded-2xl bg-azulejo-100 border border-azulejo-200 flex items-center justify-center text-2xl shrink-0">
+                      ✉️
+                    </div>
+                    <div>
+                      <h4 class="font-serif font-bold text-lg text-slate-900">La Carta Formal a Andalucía</h4>
+                      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                        Aprende las partes de una carta formal en español y escribe al Director Cultural de Andalucía usando <em>usted</em> y el <em>futuro simple</em>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-azulejo-100 flex items-center justify-between">
+                  <span class="text-xs text-slate-500">Estructura + Usted + Futuro</span>
+                  <button onclick="startLetterMission()" class="px-4 py-2 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-bold transition cursor-pointer">
+                    ${state.stamps.carta ? 'Ver / Editar Carta' : 'Abrir Taller de Carta →'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // 9. RENDER REGIONAL STAGE VIEW (1, 2, 3)
+    // ==========================================
+    function renderStage() {
+      const stage = STAGES[state.activeStageIndex];
+      const challenge = stage.challenges[state.activeChallengeIndex];
+      const totalChallenges = stage.challenges.length;
+
+      return `
+        <div class="space-y-6">
+          <!-- Back & Stage Header -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <button onclick="goHome()" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-2xs cursor-pointer">
+              ← Volver al Mapa de España
+            </button>
+            <div class="flex items-center gap-1.5">
+              ${STAGES.map((s, i) => `
+                <button onclick="startStage(${i})" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition ${i === state.activeStageIndex ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}">
+                  ${s.number}. ${s.title.split(':')[0]}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Cultural Discovery Panel -->
+          <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200 space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+              <div class="md:col-span-7 space-y-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-terracotta-600">${stage.badge}</span>
+                <h2 class="font-serif font-bold text-2xl sm:text-3xl text-slate-900">${stage.title}</h2>
+                <p class="text-sm text-slate-600">${stage.subtitle}</p>
+              </div>
+              <div class="md:col-span-5">
+                ${getStageIllustrationSVG(stage.id)}
+              </div>
+            </div>
+
+            <!-- 3 Cultural Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-2">
+              ${stage.cultureCards.map(card => `
+                <div class="bg-[#fdfaf5] border border-slate-200/90 rounded-2xl p-4 space-y-1.5">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">${card.icon}</span>
+                    <h3 class="font-serif font-bold text-sm sm:text-base text-slate-900">${card.title}</h3>
+                  </div>
+                  <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${card.text}</p>
+                </div>
+              `).join("")}
+            </div>
+          </section>
+
+          <!-- Interactive Practice Challenge -->
+          <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-md border-2 border-azulejo-500 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-azulejo-700">Desafío Cultural y Gramatical</span>
+                <h3 class="font-serif font-bold text-lg text-slate-900">Pregunta ${state.activeChallengeIndex + 1} de ${totalChallenges}</h3>
+              </div>
+              <button onclick="openModal('modal-future')" class="text-xs font-semibold text-olive-800 bg-olive-50 hover:bg-olive-100 border border-olive-200 px-3 py-1.5 rounded-lg cursor-pointer">
+                💡 Ayuda: Ver tabla del Futuro Simple
+              </button>
+            </div>
+
+            <div class="text-sm sm:text-base text-slate-800 leading-relaxed">
+              ${challenge.prompt}
+            </div>
+
+            <!-- Options -->
+            <div class="grid grid-cols-1 gap-2.5" id="challenge-options">
+              ${challenge.options.map((opt, idx) => `
+                <button onclick="checkStageAnswer(${idx})" id="opt-btn-${idx}" class="w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-slate-200 hover:border-azulejo-400 hover:bg-azulejo-50/40 transition font-medium text-sm sm:text-base text-slate-800 flex items-center justify-between gap-3 cursor-pointer">
+                  <span>${opt.text}</span>
+                  <span class="text-xs font-bold text-slate-400">Seleccionar</span>
+                </button>
+              `).join("")}
+            </div>
+
+            <!-- Feedback Box (Hidden until answered) -->
+            <div id="challenge-feedback" class="hidden rounded-2xl p-4 border text-sm"></div>
+          </section>
+        </div>
+      `;
+    }
+
+    function checkStageAnswer(optionIndex) {
+      const stage = STAGES[state.activeStageIndex];
+      const challenge = stage.challenges[state.activeChallengeIndex];
+      const chosen = challenge.options[optionIndex];
+      const feedbackBox = document.getElementById("challenge-feedback");
+
+      // Style buttons
+      challenge.options.forEach((opt, idx) => {
+        const btn = document.getElementById(`opt-btn-${idx}`);
+        btn.disabled = true;
+        btn.classList.remove("hover:border-azulejo-400", "hover:bg-azulejo-50/40");
+        if (opt.correct) {
+          btn.classList.add("border-olive-600", "bg-olive-50", "text-olive-900");
+          btn.querySelector("span:last-child").textContent = "✓ Correcto";
+          btn.querySelector("span:last-child").className = "text-xs font-bold text-olive-700";
+        } else if (idx === optionIndex && !opt.correct) {
+          btn.classList.add("border-terracotta-500", "bg-terracotta-50", "text-terracotta-900");
+          btn.querySelector("span:last-child").textContent = "✕ Revisa";
+          btn.querySelector("span:last-child").className = "text-xs font-bold text-terracotta-700";
+        }
+      });
+
+      if (chosen.correct) {
+        state.score += 25;
+        state.streak += 1;
+        updateTopBar();
+        feedbackBox.className = "rounded-2xl p-4 border border-olive-300 bg-olive-50 text-olive-900 space-y-3";
+        
+        const isLastChallenge = state.activeChallengeIndex === stage.challenges.length - 1;
+        if (isLastChallenge) {
+          state.stamps[stage.id] = true;
+          updateTopBar();
+          const nextStageIdx = state.activeStageIndex + 1;
+          const nextBtnHTML = nextStageIdx < STAGES.length
+            ? `<button onclick="startStage(${nextStageIdx})" class="px-4 py-2 rounded-xl bg-olive-700 hover:bg-olive-800 text-white font-bold text-xs sm:text-sm cursor-pointer">Siguiente Región: ${STAGES[nextStageIdx].title.split(':')[0]} →</button>`
+            : `<button onclick="startLetterMission()" class="px-4 py-2 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-xs sm:text-sm cursor-pointer">¡Ir a la Misión Final: La Carta Formal! ✉️ →</button>`;
+
+          feedbackBox.innerHTML = `
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">${stage.stampIcon}</span>
+              <div>
+                <p class="font-bold text-base">${chosen.feedback}</p>
+                <p class="text-xs sm:text-sm mt-1">🎉 <strong>¡Felicidades! Has ganado el ${stage.stampTitle}</strong> para tu Pasaporte Cultural.</p>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-1">
+              ${nextBtnHTML}
+              <button onclick="openModal('modal-passport')" class="px-3.5 py-2 rounded-xl bg-white border border-olive-300 text-olive-900 font-semibold text-xs cursor-pointer">🛂 Ver Pasaporte</button>
+            </div>
+          `;
+        } else {
+          feedbackBox.innerHTML = `
+            <p class="font-bold">${chosen.feedback}</p>
+            <button onclick="nextStageChallenge()" class="px-4 py-2 rounded-xl bg-olive-700 hover:bg-olive-800 text-white font-bold text-xs sm:text-sm cursor-pointer">
+              Continuar a la siguiente pregunta →
+            </button>
+          `;
+        }
+      } else {
+        state.streak = 0;
+        updateTopBar();
+        feedbackBox.className = "rounded-2xl p-4 border border-terracotta-300 bg-terracotta-50 text-terracotta-900 space-y-2.5";
+        feedbackBox.innerHTML = `
+          <p class="font-bold">💡 ¡Buen intento! ${chosen.feedback}</p>
+          <button onclick="retryStageChallenge()" class="px-4 py-1.5 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-xs cursor-pointer">
+            Intentar esta pregunta otra vez
+          </button>
+        `;
+      }
+
+      feedbackBox.classList.remove("hidden");
+    }
+
+    function nextStageChallenge() {
+      state.activeChallengeIndex += 1;
+      render();
+    }
+
+    function retryStageChallenge() {
+      render();
+    }
+
+    // ==========================================
+    // 10. RENDER FORMAL LETTER WORKSHOP (STAGE 4)
+    // ==========================================
+    function renderLetterWorkshop() {
+      return `
+        <div class="space-y-6">
+          <!-- Navigation Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <button onclick="goHome()" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-2xs cursor-pointer">
+              ← Volver al Mapa de España
+            </button>
+            <div class="flex items-center gap-1.5">
+              <button onclick="setLetterStep(1)" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer ${state.letterStep === 1 ? 'bg-terracotta-600 text-white' : 'bg-white text-slate-600 border border-slate-200'}">
+                Paso 1: Estructura
+              </button>
+              <button onclick="setLetterStep(2)" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer ${state.letterStep === 2 ? 'bg-terracotta-600 text-white' : 'bg-white text-slate-600 border border-slate-200'}">
+                Paso 2: Registro Formal
+              </button>
+              <button onclick="setLetterStep(3)" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer ${state.letterStep === 3 ? 'bg-terracotta-600 text-white' : 'bg-white text-slate-600 border border-slate-200'}">
+                Paso 3: Redactar Carta
+              </button>
+            </div>
+          </div>
+
+          <!-- Header Banner -->
+          <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-azulejo-700">Misión Final • Comunicación Escrita MYP</span>
+                <h2 class="font-serif font-bold text-2xl sm:text-3xl text-slate-900 mt-1">✉️ Taller: La Carta Formal en Español</h2>
+                <p class="text-sm text-slate-600 mt-1">
+                  Tu clase quiere organizar un ${v('intercambio', 'intercambio cultural')} y visitar La Alhambra en Granada. Prepara una carta oficial para el Director del Patronato Cultural de Andalucía.
+                </p>
+              </div>
+              <button onclick="openModal('modal-letter-guide')" class="px-4 py-2.5 rounded-xl bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-800 border border-terracotta-200 text-xs font-bold shrink-0 cursor-pointer">
+                📋 Ver Reglas de la Carta Formal
+              </button>
+            </div>
+          </section>
+
+          <!-- STEP 1: ORDER THE 5 PARTS OF A FORMAL LETTER -->
+          ${state.letterStep === 1 ? renderLetterStep1() : ''}
+
+          <!-- STEP 2: FORMAL (USTED) VS INFORMAL (TÚ) REGISTER -->
+          ${state.letterStep === 2 ? renderLetterStep2() : ''}
+
+          <!-- STEP 3: INTERACTIVE LETTER BUILDER WITH FUTURE TENSE -->
+          ${state.letterStep === 3 ? renderLetterStep3() : ''}
+        </div>
+      `;
+    }
+
+    function setLetterStep(step) {
+      state.letterStep = step;
+      render();
+    }
+
+    function renderLetterStep1() {
+      // Shuffled order for selection
+      const displayBlocks = [
+        LETTER_ORDER_BLOCKS[2], // Saludo
+        LETTER_ORDER_BLOCKS[0], // Lugar y fecha
+        LETTER_ORDER_BLOCKS[4], // Despedida
+        LETTER_ORDER_BLOCKS[1], // Destinatario
+        LETTER_ORDER_BLOCKS[3]  // Cuerpo
+      ];
+
+      const isComplete = state.orderedList.length === 5;
+      const isCorrectOrder = isComplete && state.orderedList.every((id, idx) => id === LETTER_ORDER_BLOCKS[idx].id);
+
+      return `
+        <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-md border-2 border-azulejo-500 space-y-5">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-azulejo-700">Paso 1 de 3</span>
+            <h3 class="font-serif font-bold text-xl text-slate-900">Ordena las 5 partes de una Carta Formal</h3>
+            <p class="text-sm text-slate-600 mt-1">Haz clic en las tarjetas <strong>en el orden correcto</strong> (desde arriba hasta abajo de la hoja).</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Left: Available Cards -->
+            <div class="space-y-2.5">
+              <span class="text-xs font-bold text-slate-500 uppercase">Haz clic para añadir en orden:</span>
+              ${displayBlocks.map(block => {
+                const alreadyPicked = state.orderedList.includes(block.id);
+                return `
+                  <button onclick="pickLetterBlock('${block.id}')" ${alreadyPicked ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-xl border-2 transition cursor-pointer ${alreadyPicked ? 'border-slate-200 bg-slate-100 opacity-50 cursor-not-allowed' : 'border-azulejo-200 bg-azulejo-50/40 hover:border-azulejo-500 hover:bg-azulejo-50'}">
+                    <strong class="text-sm text-slate-900 block">${block.label}</strong>
+                    <span class="text-xs text-slate-500 italic">"${block.sample}"</span>
+                  </button>
+                `;
+              }).join("")}
+            </div>
+
+            <!-- Right: Student's Ordered Sheet -->
+            <div class="bg-[#fdfaf5] border-2 border-dashed border-slate-300 rounded-2xl p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold text-slate-600 uppercase">Tu Esquema de Carta:</span>
+                  <button onclick="resetLetterOrder()" class="text-xs text-terracotta-600 hover:underline font-semibold cursor-pointer">Reiniciar orden</button>
+                </div>
+                <div class="space-y-2">
+                  ${[0, 1, 2, 3, 4].map(slotIdx => {
+                    const pickedId = state.orderedList[slotIdx];
+                    const blockObj = LETTER_ORDER_BLOCKS.find(b => b.id === pickedId);
+                    return `
+                      <div class="p-2.5 rounded-xl border ${blockObj ? 'bg-white border-azulejo-400 shadow-2xs' : 'bg-slate-100/60 border-slate-200'} flex items-center gap-2.5">
+                        <span class="w-6 h-6 rounded-full bg-slate-800 text-white text-xs font-bold flex items-center justify-center shrink-0">${slotIdx + 1}</span>
+                        <span class="text-xs sm:text-sm font-medium ${blockObj ? 'text-slate-900' : 'text-slate-400'}">
+                          ${blockObj ? blockObj.label : 'Selecciona la parte #' + (slotIdx + 1)}
+                        </span>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+              </div>
+
+              ${isComplete ? `
+                <div class="mt-4 p-3.5 rounded-xl ${isCorrectOrder ? 'bg-olive-50 border border-olive-300 text-olive-900' : 'bg-terracotta-50 border border-terracotta-300 text-terracotta-900'} text-xs sm:text-sm">
+                  ${isCorrectOrder 
+                    ? `<p class="font-bold">✅ ¡Estructura perfecta! Lugar/fecha → Destinatario → Saludo → Cuerpo → Despedida.</p>
+                       <button onclick="completeLetterStep1()" class="mt-2.5 px-4 py-2 rounded-xl bg-olive-700 hover:bg-olive-800 text-white font-bold text-xs cursor-pointer">Continuar al Paso 2 →</button>`
+                    : `<p class="font-bold">⚠️ El orden aún no es correcto. Pista: Primero va la fecha, luego a quién escribes, después el saludo (Estimado...), el mensaje y al final la despedida.</p>
+                       <button onclick="resetLetterOrder()" class="mt-2 px-3 py-1.5 rounded-lg bg-terracotta-600 text-white font-bold text-xs cursor-pointer">Intentar de nuevo</button>`
+                  }
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function pickLetterBlock(id) {
+      if (!state.orderedList.includes(id) && state.orderedList.length < 5) {
+        state.orderedList.push(id);
+        render();
+      }
+    }
+
+    function resetLetterOrder() {
+      state.orderedList = [];
+      render();
+    }
+
+    function completeLetterStep1() {
+      state.score += 30;
+      updateTopBar();
+      state.letterStep = 2;
+      render();
+    }
+
+    function renderLetterStep2() {
+      const q1Done = state.registerAnswers.q1 === "formal";
+      const q2Done = state.registerAnswers.q2 === "formal";
+
+      return `
+        <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-md border-2 border-azulejo-500 space-y-5">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-azulejo-700">Paso 2 de 3</span>
+            <h3 class="font-serif font-bold text-xl text-slate-900">El Registro Formal: <em>Usted</em> vs. <em>Tú</em></h3>
+            <p class="text-sm text-slate-600 mt-1">En una carta formal no usamos expresiones coloquiales ni el pronombre <em>tú</em>. Elige la opción adecuada para escribir al Director en Granada.</p>
+          </div>
+
+          <!-- Question 1 -->
+          <div class="bg-[#fdfaf5] p-4 rounded-2xl border border-slate-200 space-y-2.5">
+            <p class="font-bold text-sm text-slate-900">1. ¿Cómo empiezas el saludo de la carta?</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button onclick="answerRegister('q1', 'informal')" class="p-3 rounded-xl border-2 text-left text-xs sm:text-sm cursor-pointer ${state.registerAnswers.q1 === 'informal' ? 'border-terracotta-500 bg-terracotta-50 text-terracotta-900' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                "¡Hola Alejandro! ¿Qué tal estás?"
+              </button>
+              <button onclick="answerRegister('q1', 'formal')" class="p-3 rounded-xl border-2 text-left text-xs sm:text-sm cursor-pointer ${state.registerAnswers.q1 === 'formal' ? 'border-olive-600 bg-olive-50 text-olive-900 font-semibold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                "Estimado Sr. Director:"
+              </button>
+            </div>
+            ${state.registerAnswers.q1 === 'informal' ? `<p class="text-xs text-terracotta-700 font-medium">❌ Demasiado informal. Usa "Estimado Sr. / Estimada Sra." con dos puntos (:).</p>` : ''}
+            ${state.registerAnswers.q1 === 'formal' ? `<p class="text-xs text-olive-700 font-medium">✅ ¡Correcto! Cortesía formal y dos puntos (:) al final.</p>` : ''}
+          </div>
+
+          <!-- Question 2 -->
+          <div class="bg-[#fdfaf5] p-4 rounded-2xl border border-slate-200 space-y-2.5">
+            <p class="font-bold text-sm text-slate-900">2. ¿Cómo pides información sobre las entradas para tu grupo?</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button onclick="answerRegister('q2', 'formal')" class="p-3 rounded-xl border-2 text-left text-xs sm:text-sm cursor-pointer ${state.registerAnswers.q2 === 'formal' ? 'border-olive-600 bg-olive-50 text-olive-900 font-semibold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                "Le escribo para solicitar información sobre nuestra visita."
+              </button>
+              <button onclick="answerRegister('q2', 'informal')" class="p-3 rounded-xl border-2 text-left text-xs sm:text-sm cursor-pointer ${state.registerAnswers.q2 === 'informal' ? 'border-terracotta-500 bg-terracotta-50 text-terracotta-900' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                "Oye, dime cuánto cuestan las entradas para mis amigos."
+              </button>
+            </div>
+            ${state.registerAnswers.q2 === 'informal' ? `<p class="text-xs text-terracotta-700 font-medium">❌ "Oye" y "dime" usan 'tú'. En cartas formales usamos "Le escribo para solicitar...".</p>` : ''}
+            ${state.registerAnswers.q2 === 'formal' ? `<p class="text-xs text-olive-700 font-medium">✅ ¡Muy bien! "Le escribo" (a usted) y el verbo "solicitar" son ideales.</p>` : ''}
+          </div>
+
+          ${q1Done && q2Done ? `
+            <div class="pt-2">
+              <button onclick="completeLetterStep2()" class="px-5 py-2.5 rounded-xl bg-olive-700 hover:bg-olive-800 text-white font-bold text-sm shadow-xs cursor-pointer">
+                ¡Excelente! Pasar a Redactar la Carta Oficial (Paso 3) →
+              </button>
+            </div>
+          ` : ''}
+        </section>
+      `;
+    }
+
+    function answerRegister(qKey, val) {
+      state.registerAnswers[qKey] = val;
+      render();
+    }
+
+    function completeLetterStep2() {
+      state.score += 30;
+      updateTopBar();
+      state.letterStep = 3;
+      render();
+    }
+
+    function renderLetterStep3() {
+      const b = state.letterBlanks;
+      return `
+        <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-md border-2 border-terracotta-500 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-terracotta-700">Paso 3 de 3 • Redacción Final</span>
+              <h3 class="font-serif font-bold text-xl text-slate-900">Completa la Carta Formal a Granada (Andalucía)</h3>
+              <p class="text-sm text-slate-600 mt-1">Selecciona las opciones correctas de <strong>registro formal</strong> y <strong>futuro simple</strong> para enviar tu carta oficial.</p>
+            </div>
+            <button onclick="openModal('modal-future')" class="text-xs font-bold text-olive-800 bg-olive-50 px-3 py-1.5 rounded-lg border border-olive-200 cursor-pointer">
+              ⏳ Ver terminaciones del Futuro
+            </button>
+          </div>
+
+          <!-- Student Info Inputs -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div>
+              <label class="text-xs font-bold text-slate-600 block mb-1">Tu nombre (para la firma):</label>
+              <input type="text" value="${b.studentName}" oninput="updateLetterField('studentName', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-hidden focus:border-azulejo-500" placeholder="Escribe tu nombre">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-600 block mb-1">Tu colegio / escuela:</label>
+              <input type="text" value="${b.schoolName}" oninput="updateLetterField('schoolName', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-hidden focus:border-azulejo-500" placeholder="Nombre de tu colegio">
+            </div>
+          </div>
+
+          <!-- Formal Letter Paper Template -->
+          <div class="bg-[#fffdf9] border-2 border-slate-300 rounded-2xl p-5 sm:p-8 shadow-inner space-y-4 text-sm sm:text-base leading-relaxed font-serif text-slate-800">
+            <!-- 1. Lugar y fecha -->
+            <div class="text-right text-xs sm:text-sm text-slate-600">
+              Granada, 17 de noviembre de 2026
+            </div>
+
+            <!-- 2. Destinatario -->
+            <div class="text-xs sm:text-sm text-slate-700 font-sans">
+              <strong>Sr. D. Alejandro Morales</strong><br>
+              Director del Patronato Cultural de Andalucía<br>
+              Calle Real de la Alhambra, s/n — 18009 Granada, España
+            </div>
+
+            <!-- 3. Saludo -->
+            <div class="pt-1 font-sans">
+              <select onchange="updateLetterField('salutation', this.value)" class="px-2.5 py-1.5 rounded-lg border-2 ${b.salutation === 'Estimado Sr. Director:' ? 'border-olive-500 bg-olive-50' : 'border-azulejo-400 bg-azulejo-50'} font-semibold text-sm text-slate-900">
+                <option value="">-- Elige el saludo formal --</option>
+                <option value="Estimado Sr. Director:" ${b.salutation === 'Estimado Sr. Director:' ? 'selected' : ''}>Estimado Sr. Director:</option>
+                <option value="¡Qué onda, Director!" ${b.salutation === '¡Qué onda, Director!' ? 'selected' : ''}>¡Qué onda, Director!</option>
+                <option value="Querido amigo Alejandro," ${b.salutation === 'Querido amigo Alejandro,' ? 'selected' : ''}>Querido amigo Alejandro,</option>
+              </select>
+            </div>
+
+            <!-- 4. Cuerpo -->
+            <div class="space-y-3 font-sans text-sm sm:text-base text-slate-800">
+              <p>
+                Me dirijo a 
+                <select onchange="updateLetterField('pronoun', this.value)" class="px-2 py-1 rounded-lg border-2 ${b.pronoun === 'usted' ? 'border-olive-500 bg-olive-50' : 'border-azulejo-400 bg-azulejo-50'} font-semibold text-sm">
+                  <option value="">-- pronombre --</option>
+                  <option value="usted" ${b.pronoun === 'usted' ? 'selected' : ''}>usted</option>
+                  <option value="ti" ${b.pronoun === 'ti' ? 'selected' : ''}>ti</option>
+                </select>
+                en representación de los estudiantes de Español MYP Fase 3 de <strong>${b.schoolName || 'nuestro colegio'}</strong> para ${v('solicitar', 'solicitar')} una visita educativa a La Alhambra y al centro histórico de Andalucía el próximo mes.
+              </p>
+
+              <p>
+                Durante nuestro viaje cultural, nosotros 
+                <select onchange="updateLetterField('verb1', this.value)" class="px-2 py-1 rounded-lg border-2 ${b.verb1 === 'visitaremos' ? 'border-olive-500 bg-olive-50' : 'border-azulejo-400 bg-azulejo-50'} font-semibold text-sm">
+                  <option value="">-- visitar (nosotros) --</option>
+                  <option value="visitaremos" ${b.verb1 === 'visitaremos' ? 'selected' : ''}>visitaremos</option>
+                  <option value="visitamos" ${b.verb1 === 'visitamos' ? 'selected' : ''}>visitamos</option>
+                  <option value="visitarán" ${b.verb1 === 'visitarán' ? 'selected' : ''}>visitarán</option>
+                </select>
+                los palacios nazaríes y 
+                <select onchange="updateLetterField('verb2', this.value)" class="px-2 py-1 rounded-lg border-2 ${b.verb2 === 'aprenderemos' ? 'border-olive-500 bg-olive-50' : 'border-azulejo-400 bg-azulejo-50'} font-semibold text-sm">
+                  <option value="">-- aprender (nosotros) --</option>
+                  <option value="aprenderemos" ${b.verb2 === 'aprenderemos' ? 'selected' : ''}>aprenderemos</option>
+                  <option value="aprenderé" ${b.verb2 === 'aprenderé' ? 'selected' : ''}>aprenderé</option>
+                  <option value="aprendemos" ${b.verb2 === 'aprendemos' ? 'selected' : ''}>aprendemos</option>
+                </select>
+                sobre la historia del arte mudéjar. Además, nuestro grupo 
+                <select onchange="updateLetterField('verb3', this.value)" class="px-2 py-1 rounded-lg border-2 ${b.verb3 === 'tendrá' ? 'border-olive-500 bg-olive-50' : 'border-azulejo-400 bg-azulejo-50'} font-semibold text-sm">
+                  <option value="">-- tener (irregular, el grupo) --</option>
+                  <option value="tendrá" ${b.verb3 === 'tendrá' ? 'selected' : ''}>tendrá</option>
+                  <option value="tenerá" ${b.verb3 === 'tenerá' ? 'selected' : ''}>tenerá</option>
+                  <option value="tendrán" ${b.verb3 === 'tendrán' ? 'selected' : ''}>tendrán</option>
+                </select>
+                la oportunidad de conocer los ${v('azulejos', 'azulejos')} tradicionales y la gastronomía local de Sevilla y Granada.
+              </p>
+
+              <p>
+                Agradecemos de antemano su amable atención y quedamos a la espera de su respuesta.
+              </p>
+            </div>
+
+            <!-- 5. Despedida y Firma -->
+            <div class="pt-2 font-sans space-y-2">
+              <select onchange="updateLetterField('closing', this.value)" class="px-2.5 py-1.5 rounded-lg border-2 ${b.closing === 'Atentamente,' ? 'border-olive-500 bg-olive-50' : 'border-azulejo-400 bg-azulejo-50'} font-semibold text-sm">
+                <option value="">-- Elige la despedida formal --</option>
+                <option value="Atentamente," ${b.closing === 'Atentamente,' ? 'selected' : ''}>Atentamente,</option>
+                <option value="¡Nos vemos luego, chao!" ${b.closing === '¡Nos vemos luego, chao!' ? 'selected' : ''}>¡Nos vemos luego, chao!</option>
+                <option value="Un abrazo fuerte," ${b.closing === 'Un abrazo fuerte,' ? 'selected' : ''}>Un abrazo fuerte,</option>
+              </select>
+              <div class="pt-2 text-sm text-slate-800">
+                <strong>${b.studentName || 'Estudiante MYP'}</strong><br>
+                <span class="text-xs text-slate-500">Estudiante de Español MYP Fase 3 • ${b.schoolName || 'Colegio Internacional'}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Validation & Submit Button -->
+          <div id="letter-validation-msg" class="hidden rounded-2xl p-4 text-sm"></div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <span class="text-xs text-slate-500">Verifica que los 6 campos estén en registro formal y futuro simple.</span>
+            <button onclick="validateAndSendLetter()" class="px-6 py-3 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-sm shadow-md transition cursor-pointer flex items-center gap-2">
+              <span>📮</span> <span>Sellar y Enviar Carta Formal</span>
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    function updateLetterField(field, value) {
+      state.letterBlanks[field] = value;
+      render();
+    }
+
+    function validateAndSendLetter() {
+      const b = state.letterBlanks;
+      const msgBox = document.getElementById("letter-validation-msg");
+      const errors = [];
+
+      if (b.salutation !== "Estimado Sr. Director:") {
+        errors.push("El <strong>saludo</strong> debe ser formal y terminar con dos puntos: <em>Estimado Sr. Director:</em>");
+      }
+      if (b.pronoun !== "usted") {
+        errors.push("En una carta formal usamos el pronombre de cortesía <strong>usted</strong> (no <em>ti/tú</em>).");
+      }
+      if (b.verb1 !== "visitaremos") {
+        errors.push("Para 'nosotros' en futuro simple, <em>visitar</em> se conjuga: <strong>visitaremos</strong>.");
+      }
+      if (b.verb2 !== "aprenderemos") {
+        errors.push("Para 'nosotros' en futuro simple, <em>aprender</em> se conjuga: <strong>aprenderemos</strong>.");
+      }
+      if (b.verb3 !== "tendrá") {
+        errors.push("El verbo <em>tener</em> es irregular en futuro (raíz <em>tendr-</em>). Para 'nuestro grupo' (singular): <strong>tendrá</strong>.");
+      }
+      if (b.closing !== "Atentamente,") {
+        errors.push("La <strong>despedida</strong> en una carta formal debe ser respetuosa: <em>Atentamente,</em>");
+      }
+
+      if (errors.length > 0) {
+        msgBox.className = "rounded-2xl p-4 bg-terracotta-50 border border-terracotta-300 text-terracotta-900 text-xs sm:text-sm space-y-1.5";
+        msgBox.innerHTML = `
+          <p class="font-bold">⚠️ Revisa estos detalles antes de enviar tu carta:</p>
+          <ul class="list-disc pl-5 space-y-1">
+            ${errors.map(e => `<li>${e}</li>`).join("")}
+          </ul>
+        `;
+        msgBox.classList.remove("hidden");
+      } else {
+        state.stamps.carta = true;
+        state.score += 50;
+        state.streak += 1;
+        updateTopBar();
+        openCertificate();
+      }
+    }
+
+    // ==========================================
+    // 11. RENDER FINAL CERTIFICATE & COMPLETED LETTER
+    // ==========================================
+    function renderCertificate() {
+      const b = state.letterBlanks;
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <button onclick="goHome()" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 cursor-pointer">
+              ← Volver al Mapa Principal
+            </button>
+            <button onclick="window.print()" class="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-azulejo-700 hover:bg-azulejo-800 px-4 py-2 rounded-xl shadow-xs cursor-pointer">
+              🖨️ Imprimir / Guardar PDF
+            </button>
+          </div>
+
+          <div id="printable-certificate" class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border-4 border-azulejo-700 space-y-6">
+            <!-- Top Emblem -->
+            <div class="text-center border-b-2 border-saffron-300 pb-5 space-y-2">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-olive-100 text-olive-800 text-xs font-bold uppercase tracking-wider">
+                ✓ Misión Completada • Español MYP Fase 3
+              </div>
+              <h2 class="font-serif font-bold text-2xl sm:text-4xl text-slate-900">
+                Certificado de Embajador/a Cultural
+              </h2>
+              <p class="text-sm text-slate-600">
+                Otorgado a <strong class="text-terracotta-700 text-base sm:text-lg">${b.studentName || 'Estudiante MYP'}</strong> (${b.schoolName || 'Colegio Internacional'}) por explorar las regiones de España, dominar el <strong>futuro simple</strong> y redactar una <strong>carta formal</strong> oficial.
+              </p>
+
+              <!-- 4 Stamps Row -->
+              <div class="flex flex-wrap justify-center gap-3 pt-3">
+                <span class="px-3 py-1.5 rounded-xl bg-terracotta-50 border border-terracotta-300 text-terracotta-800 text-xs font-bold">🕌 Andalucía</span>
+                <span class="px-3 py-1.5 rounded-xl bg-saffron-50 border border-saffron-300 text-saffron-800 text-xs font-bold">👑 Madrid</span>
+                <span class="px-3 py-1.5 rounded-xl bg-azulejo-50 border border-azulejo-300 text-azulejo-800 text-xs font-bold">⛵ Mediterráneo</span>
+                <span class="px-3 py-1.5 rounded-xl bg-olive-50 border border-olive-300 text-olive-800 text-xs font-bold">✉️ Carta Formal</span>
+              </div>
+            </div>
+
+            <!-- Final Official Formal Letter Display -->
+            <div class="bg-[#fdfaf5] border border-slate-200 rounded-2xl p-5 sm:p-7 space-y-3 text-sm leading-relaxed">
+              <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-azulejo-800">Copia Oficial de tu Carta Formal Enviada</span>
+                <span class="text-xs font-bold text-terracotta-700 border border-terracotta-400 px-2 py-0.5 rounded-md rotate-[-3deg]">SELLADO • GRANADA</span>
+              </div>
+              <p class="text-right text-xs text-slate-600">Granada, 17 de noviembre de 2026</p>
+              <p class="text-xs text-slate-700">
+                <strong>Sr. D. Alejandro Morales</strong><br>
+                Director del Patronato Cultural de Andalucía<br>
+                Granada, España
+              </p>
+              <p class="font-bold text-slate-900 pt-1">Estimado Sr. Director:</p>
+              <p class="text-slate-800">
+                Me dirijo a <strong>usted</strong> en representación de los estudiantes de Español MYP Fase 3 de <strong>${b.schoolName || 'nuestro colegio'}</strong> para solicitar una visita educativa a La Alhambra y al centro histórico de Andalucía el próximo mes.
+              </p>
+              <p class="text-slate-800">
+                Durante nuestro viaje cultural, nosotros <strong>visitaremos</strong> los palacios nazaríes y <strong>aprenderemos</strong> sobre la historia del arte mudéjar. Además, nuestro grupo <strong>tendrá</strong> la oportunidad de conocer los azulejos tradicionales y la gastronomía local de Sevilla y Granada.
+              </p>
+              <p class="text-slate-800">Agradecemos de antemano su amable atención y quedamos a la espera de su respuesta.</p>
+              <p class="pt-2 text-slate-900">
+                <strong>Atentamente,</strong><br>
+                ${b.studentName || 'Estudiante MYP'}
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // 12. MAIN RENDER LOOP
+    // ==========================================
+    function render() {
+      const app = document.getElementById("app-container");
+      if (state.currentView === "home") {
+        app.innerHTML = renderHome();
+      } else if (state.currentView === "stage") {
+        app.innerHTML = renderStage();
+      } else if (state.currentView === "letter") {
+        app.innerHTML = renderLetterWorkshop();
+      } else if (state.currentView === "certificate") {
+        app.innerHTML = renderCertificate();
+      }
+    }
+
+    // Initialize application on load
+    window.addEventListener("DOMContentLoaded", () => {
+      updateTopBar();
+      render();
+    });
+  </script>
+</body>
+</html>
